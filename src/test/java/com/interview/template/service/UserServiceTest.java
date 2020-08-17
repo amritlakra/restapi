@@ -1,10 +1,5 @@
 package com.interview.template.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
-
 import com.interview.template.configuration.ApplicationConfiguration;
 import com.interview.template.dao.UserDao;
 import com.interview.template.exceptions.DuplicateUserException;
@@ -16,14 +11,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(initializers = ConfigFileApplicationContextInitializer.class)
@@ -34,6 +34,9 @@ class UserServiceTest {
 	@Mock
 	private UserDao userDao;
 
+	@Mock
+	private PasswordEncoder passwordEncoder;
+
 	@Autowired
 	private ApplicationConfiguration applicationConfiguration;
 
@@ -41,7 +44,7 @@ class UserServiceTest {
 
 	@BeforeEach
 	void beforeEach() {
-		userService = new UserService(userDao,applicationConfiguration);
+		userService = new UserService(userDao,applicationConfiguration,passwordEncoder);
 	}
 
 	@Test
