@@ -10,13 +10,6 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-
-logging:
-  level:
-    root: INFO
-    org.springframework.web: INFO
-    org.hibernate: INFO
-
 app:
   blacklist:
     - admin
@@ -30,3 +23,8 @@ app:
     - admin
     - administrator
     - root
+---
+spring:
+  profiles: container
+  datasource:
+    url: jdbc:postgresql://db:5432/interview
