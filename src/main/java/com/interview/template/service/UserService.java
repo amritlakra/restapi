@@ -9,6 +9,7 @@ import com.interview.template.model.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class UserService {
     private final UserDao userDao;
 
     private ApplicationConfiguration applicationConfiguration;
+
+    private PasswordEncoder passwordEncoder;
 
     public List<UserEntity> getAllUsers() {
         return userDao.findAll();
@@ -42,6 +45,7 @@ public class UserService {
             if(applicationConfiguration.getBlacklist().contains(userEntity.getUsername()))
                 throw new ReservedUsernameException("attempt to create user with a reserved username");
 
+            userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
             return userDao.create(userEntity);
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             throw new DuplicateUserException("user with provided username or email already exists");
